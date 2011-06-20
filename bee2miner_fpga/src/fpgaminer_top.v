@@ -50,7 +50,7 @@ module fpgaminer_top (sysclk_p, sysclk_m, RxD, RxC, RxTxR, TxD, TxC, leds);
    //
    // Valid range: [0, 5]
    
-   parameter LOOP_LOG2 = 0;
+   parameter LOOP_LOG2 = 2;
    
    // No need to adjust these parameters
    localparam [5:0] LOOP = (6'd1 << LOOP_LOG2);
@@ -80,8 +80,8 @@ module fpgaminer_top (sysclk_p, sysclk_m, RxD, RxC, RxTxR, TxD, TxC, leds);
 	reg clk_50MHz = 0;
 	reg clk_25MHz = 0;
 	
-   //IBUFDS_LVDS_25 ib (.I(sysclk_p), .IB(sysclk_m), .O(clk_100MHz));
-   assign clk_100MHz = sysclk_p;
+   IBUFDS_LVDS_25 ib (.I(sysclk_p), .IB(sysclk_m), .O(clk_100MHz));
+   //assign clk_100MHz = sysclk_p;
    
    
 	always@(posedge clk_100MHz) 

@@ -20,8 +20,12 @@ add wave -noupdate -expand -group Rx -radix hexadecimal /miner_test_v/uut/serrx/
 add wave -noupdate -expand -group Rx -radix hexadecimal /miner_test_v/uut/serrx/input_copy
 add wave -noupdate -expand -group Rx /miner_test_v/RxD
 add wave -noupdate -expand -group Rx /miner_test_v/RxC
+add wave -noupdate -expand -group Tx -radix hexadecimal /miner_test_v/read_data
+add wave -noupdate -expand -group Tx -radix hexadecimal /miner_test_v/TxD
+add wave -noupdate -expand -group Tx -radix hexadecimal /miner_test_v/TxC
+add wave -noupdate -expand -group Tx -radix hexadecimal /miner_test_v/read_nonce
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {2407835 ps} 0}
+WaveRestoreCursors {{Cursor 1} {154337167 ps} 0}
 configure wave -namecolwidth 344
 configure wave -valuecolwidth 98
 configure wave -justifyvalue left
@@ -36,4 +40,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {2407835 ps} {2845623 ps}
+WaveRestoreZoom {0 ps} {3138462 ps}
