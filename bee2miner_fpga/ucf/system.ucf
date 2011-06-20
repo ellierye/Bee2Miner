@@ -1,0 +1,44 @@
+######################################
+## System level constraints
+######################################
+
+#NET reset_n                         TIG;  
+#NET dcm_clk_s                       PERIOD = 10 ns HIGH 50 %;
+
+#NET osc_clk                          PERIOD = 10 ns HIGH 50 %;
+
+NET "sysclk_p" TNM_NET = "sysclk_p";
+TIMESPEC "TS_sysclk_p" = PERIOD "sysclk_p" 10 ns HIGH 50 %;
+
+######################################
+## Clock/reset pins
+######################################
+
+#NET reset_n                         LOC = AR7   | IOSTANDARD = LVCMOS18;
+NET sysclk_m                        LOC = AN21  | IOSTANDARD = LVDS_25;
+NET sysclk_p                        LOC = AP21  | IOSTANDARD = LVDS_25;
+
+#NET osc_clk LOC = AN21;
+
+
+######################################
+## LED/GPIO pins
+######################################
+
+NET leds<0>                        LOC = AB6   | IOSTANDARD = LVCMOS18 | DRIVE = 24;
+NET leds<1>                        LOC = AB7   | IOSTANDARD = LVCMOS18 | DRIVE = 24;
+NET leds<2>                        LOC = AB9   | IOSTANDARD = LVCMOS18 | DRIVE = 24;
+NET leds<3>                        LOC = AB10  | IOSTANDARD = LVCMOS18 | DRIVE = 24;
+NET leds<4>                        LOC = AD7   | IOSTANDARD = LVCMOS18 | DRIVE = 24;
+NET leds<5>                        LOC = AF1   | IOSTANDARD = LVCMOS18 | DRIVE = 24;
+
+######################################
+## From the Control FPGA
+######################################					  
+
+NET RxD                        LOC = AV11   | IOSTANDARD = LVDCI_25;
+NET RxC                        LOC = AW10   | IOSTANDARD = LVDCI_25;
+NET TxC                        LOC = AP11   | IOSTANDARD = LVDCI_25;
+NET RxTxR                      LOC = AR11   | IOSTANDARD = LVDCI_25;
+NET TxD                        LOC = M13    | IOSTANDARD = LVCMOS25 | SLEW = FAST | DRIVE = 12;
+
