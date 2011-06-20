@@ -40,6 +40,8 @@ module miner_test_v;
    
    
    reg [7:0] read_data;
+   reg [31:0] read_nonce;
+   
    
    
    // Outputs
@@ -126,10 +128,12 @@ module miner_test_v;
 	 uut.nonce = 0;
       end
       @(posedge sysclk_p);
-      uut.nonce = 30411740 - 10;
-      
+      //uut.nonce = 30411740 - 10;
+      uut.nonce = 32'h2966e1b9 - 10;
+            
       //read
-      repeat (8) begin
+      read_nonce = 0;
+      repeat (4) begin
     	 #2 data_available =  0;
     	 
     	 while (data_available == 0) begin
@@ -141,7 +145,7 @@ module miner_test_v;
     	    #2 data_available =  TxD;
     	 end
     	 read_data = 8'b0;
-    	 repeat(8) begin
+	 repeat(8) begin
     	    repeat (10) @ (posedge sysclk_p);
     	    #2 TxC =  1;
     	    repeat (10) @ (posedge sysclk_p);
@@ -149,6 +153,7 @@ module miner_test_v;
     	    repeat (10) @ (posedge sysclk_p);
     	    read_data = {TxD, read_data[7:1]};
     	 end
+	 read_nonce = {read_nonce[24:0], read_data};
       end
       
       
