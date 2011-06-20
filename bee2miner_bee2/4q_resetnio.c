@@ -79,11 +79,39 @@ void ReadByte(unsigned char *c, int fd) {
   printf("Read Byte %02x\n", *c);
 }
 
+int ReadByteNB(unsigned char* c, int fd){
+  int i;
+  int ready = ReadDataAvailable(fd);
+  if (ready){
+    *c = 0;
+    for (i = 0; i < 8; ++i) {
+      *c = *c >> 1;
+      set_JTMS(1, fd);
+      //usleep(1);
+      set_JTMS(0, fd);
+      //usleep(1);
+      if (get_JTDO(fd)) {
+	*c = *c | 0x80;
+      }
+    }
+    printf("Read Byte (NB) %02x\n", *c);
+  }
+  return ready;
+}
+
 void WriteBuffer(unsigned char *buffer, int size, int fd) {
   int i;
   for (i = 0; i < size; ++i) {
     WriteByte(*buffer, fd);
     buffer++;
+  }
+}
+
+void WriteBufferToAll(unsigned char * buffer, int size, int numQuads, int fd){
+  int q;
+  for (q = 0; q < numQuads; q++){
+    SetQuad(q, fd);
+    WriteBuffer(buffer, size, fd);
   }
 }
 
@@ -94,12 +122,33 @@ void ReadBuffer(unsigned char *buffer, int size, int fd) {
     buffer++;
   }
 }
- 
+
+void ReadBufferFromAny(unsigned char *buffer, int size, int numQuads, int fd){
+  int done = 0;
+  unsigned char * bufferPtr = buffer;
+  while (!done){
+    int q;
+    for (q = 0; q < numQuads; q++){
+      SetQuad(q, fd);
+      if (ReadByteNB(bufferPtr, fd)){
+	bufferPtr ++;
+	ReadBuffer(bufferPtr, size-1, fd);
+	done = 1;
+	break;
+      }
+    }
+  }
+}
+  
 int main(int argc, char *argv[]) 
 { 
   int ppc_fd = 0; 
   int err;
+  int numQ = 4; //Number of Quads, should probably be command line arg.
+  int q;
+
   unsigned int nonce;
+  
    
   unsigned char bufferin[64];
   unsigned char bufferout[32];
@@ -193,8 +242,11 @@ int main(int argc, char *argv[])
     exit (1);
   }
 
-  SetQuad(0, ppc_fd);
-  ResetRW(ppc_fd);
+  //SetQuad(0, ppc_fd);
+  for (q = 0; q < numQ; q++){
+    SetQuad(q, ppc_fd);
+    ResetRW(ppc_fd);
+  }
 
   // Single byte read/write test
   //  WriteByte('z', ppc_fd);
@@ -206,19 +258,17 @@ int main(int argc, char *argv[])
   memcpy(bufferin, midstate_buf, 32);
   memcpy(bufferin+32, data_buf, 32);
   
-  WriteBuffer(bufferin, 64, ppc_fd);
-  ReadBuffer(bufferout, 4, ppc_fd);
+  //WriteBuffer(bufferin, 64, ppc_fd);
+  //ReadBuffer(bufferout, 4, ppc_fd);
+  WriteBufferToAll(bufferin, 64, numQ, ppc_fd);
+  ReadBufferFromAny(bufferout, 4, numQ, ppc_fd);
   
   nonce =  (bufferout[0] << 0  & 0x000000FF);
   nonce |= (bufferout[1] << 8  & 0x0000FF00);
   nonce |= (bufferout[2] << 16 & 0x00FF0000);
   nonce |= (bufferout[3] << 24 & 0xFF000000);
   
-  printf("\nRead : %d  (0x%08x)\n", nonce); 
-   
-  //  fflush(stdout);
-  //usleep(1);
-  // END OF METHODIC BREAK 
-      
+  printf("\nRead : %d  (0x%08x)\n", nonce, nonce); 
+  
   return 0;
 } 
