@@ -92,7 +92,8 @@ module fpgaminer_doubled_top (sysclk_p, sysclk_m, RxD, RxC, RxTxR, TxD, TxC, led
 
    
    //// Hashers (0)
-   wire [255:0] hash_0, hash2_0;
+   wire [255:0] hash_0;
+   wire [255:0] hash2_0;
    reg [5:0] 	cnt = 6'd0;
    reg 		feedback = 1'b0;
    
@@ -114,7 +115,8 @@ module fpgaminer_doubled_top (sysclk_p, sysclk_m, RxD, RxC, RxTxR, TxD, TxC, led
 					 );
    
    //// Hashers (1)
-   wire [255:0] hash_1, hash2_1;
+   wire [255:0] hash_1;
+   wire [255:0] hash2_1;
    
    sha256_transform #(.LOOP(LOOP)) hash01 (
 					.clk(hash_clk),
@@ -122,7 +124,7 @@ module fpgaminer_doubled_top (sysclk_p, sysclk_m, RxD, RxC, RxTxR, TxD, TxC, led
 					.cnt(cnt),
 					.rx_state(state),
 					.rx_input(data_1),
-					.tx_hash(hash)
+					.tx_hash(hash_1)
 					);
    sha256_transform #(.LOOP(LOOP)) hash11 (
 					 .clk(hash_clk),
