@@ -44,7 +44,7 @@ void ResetRW(int fd) {
 
 void WriteByte(unsigned char c, int fd) {
   int i;
-  printf("Write Byte %02x\n", c);
+  //printf("Write Byte %02x\n", c);
   for (i = 0; i < 8; ++i) {
    
     set_JTDI(c & 0x01, fd); // set data
