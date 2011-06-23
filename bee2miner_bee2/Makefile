@@ -20,7 +20,7 @@ ifeq ($(ARCH), ppc)
 endif
 ifeq ($(ARCH), x86_64) 
 	ifeq ($(NOXC), 1)
-		CC=gcc
+		CC=gcc -DNOXC
 	else 
 		CC=/opt/ppc/bin/powerpc-405-linux-gnu-gcc	
 	endif
@@ -39,23 +39,24 @@ endif
 
 .SUFFIXES: .c .o
 
-TARGETS := 	4q_resetnio
-
-SCRIPTS := 	4q_run_test.sh 4q_debug.sh
+TARGETS :=	minernet simpletest
 
 HEADER_FILES = 	4q_ppc_user_logic.h 		\
 		coredrv.h 			\
-		4q_resetnio.h 			\
 		4q_bee2lib.h 			\
 		4q_jtag.h                       \
+		quadrwlib.h                     \
+		simplenet.h                     \
 
 
 LIBS = $(OBJS_DIR)/4q_bee2lib.o 
 LIBS += $(OBJS_DIR)/4q_jtag.o 
+LIBS += $(OBJS_DIR)/simplenet.o 
+LIBS += $(OBJS_DIR)/quadrwlib.o
 
 SRCS = $(addsuffix .c, $(TARGETS)) $(LIBS,.o=.c)
 TARGETSBIN =$(addprefix $(BIN_DIR)/,$(TARGETS))
-SCRIPTSBIN =$(addprefix $(BIN_DIR)/,$(SCRIPTS))
+
 OBJS = $(addprefix objs/, $(SRCS,.c=.o))
 CFLAGS = -g -Wall
 .PRECIOUS: $(OBJS_DIR)/%.o 
@@ -64,11 +65,11 @@ CFLAGS = -g -Wall
 # search path for src files
 vpath %.c $(SRC_DIR)
 vpath %.h $(SRC_DIR)
-vpath %.sh $(SRC_DIR)
+#vpath %.sh $(SRC_DIR)
 vpath %.o $(OBJS_DIR)
 
 #################################### RULES #####################################
-all: $(TARGETSBIN) $(SCRIPTSBIN)
+all: $(TARGETSBIN)
 
 $(TARGET_DIRS):
 	@echo

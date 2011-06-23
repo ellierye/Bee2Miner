@@ -33,6 +33,6 @@ README.txt: this file
 to SM from PPC over JTAG.  This is the interface we used to talk to the
 miners running on the User FPGAs.
 
-4q_resetnio.c/h : This main program will send the data/midstate to the user
+minernet.c : This main program will send the data/midstate to the user
 FPGA(s) and read off nonces. It will also handle asking for more work
 via a socket interface.
