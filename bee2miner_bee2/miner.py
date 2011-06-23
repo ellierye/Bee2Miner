@@ -21,13 +21,13 @@ from Queue import Queue
 parser = OptionParser()
 parser.add_option("-u", "--user", dest="user", help="username")
 parser.add_option("-w", "--pass", dest="password", help="password")
-parser.add_option("-h", "--host", dest="host", help="host",
+parser.add_option("-t", "--host", dest="host", help="host",
                   default="uswest.btcguild.com")
 parser.add_option("-p", "--port", dest="port", help="port", type="int",
                   default=8332)
 parser.add_option("-x", "--minerhost", dest="minerhost",
                   help="miner host address")
-parser.add_option("-y", "--minerport", dest="minerport",
+parser.add_option("-y", "--minerport", dest="minerport", type="int",
                   help="miner port")
 (options, args) = parser.parse_args()
 
@@ -164,7 +164,7 @@ class Display_stats(Thread):
 
 golden = Event()
 
-url = 'http://' + user + ':' + password + '@' + host + ':' + http_port
+url = 'http://' + options.user + ':' + options.password + '@' + options.host + ':' + str(options.port)
 
 bitcoin = ServiceProxy(url)
 
