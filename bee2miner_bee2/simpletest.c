@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
   ppc_fd = InitQuadInterface();
 
   //SetQuad(0, ppc_fd);
+  int q;
   for (q = 0; q < numQ; q++){
     SetQuad(q, ppc_fd);
     ResetRW(ppc_fd);
