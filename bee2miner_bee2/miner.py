@@ -4,7 +4,12 @@
 # Modified for use with bee2miner
 # Opens socket instead of serial connection
 
-askrate = 5
+#rate at which we ask the server for new work
+# (aka giving up on the block we were working on).
+# Our implementation is running at 12.5 kHash/sec,
+# so 2^32 nonce attempts takes 5.7 minutes.
+# Since that's half a friggin block time I'll make it 3 minutes.
+askrate = (3 * 60)
 
 ###############################################################################
 
@@ -95,6 +100,8 @@ class Writer(Thread):
                 print("RPC getwork error")
                 # In this case, keep crunching with the old data. It will get 
                 # stale at some point, but it's better than doing nothing.
+                
+            print ("Got Work.\n");
 
             self.block = work['data']
             
@@ -109,7 +116,8 @@ class Writer(Thread):
             payload = rmid + rdata2
             
             sock.send(payload)
-            
+            print("Sending new work...\n");
+
             result = golden.wait(askrate)
 
             if result:
