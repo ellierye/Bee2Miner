@@ -73,10 +73,16 @@ module miner_test_v;
        RxTxR = 0;
        TxC = 0;
       
-      midstate_buf = 256'h2b3f81261b3cfd001db436cfd4c8f3f9c7450c9a0d049bee71cba0ea2619c0b5;
-      data_buf = 256'h00000000000000000000000080000000_00000000_39f3001b6b7b8d4dc14bfc31;
+      //midstate_buf = 256'h2b3f81261b3cfd001db436cfd4c8f3f9c7450c9a0d049bee71cba0ea2619c0b5;
+      //data_buf =     256'h00000000000000000000000080000000_00000000_39f3001b6b7b8d4dc14bfc31;
       //nonce <= 30411740;
-          		
+
+      midstate_buf = 256'h228ea4732a3c9ba860c009cda7252b9161a5e75ec8c582a5f106abb3af41f790;
+      data_buf =     256'h00000000000000000000000080000000000000002194261a9395e64dbed17115;
+      //nonce = 32'h0e33337a;
+		     
+		     
+  		
       data_available = 0;
       
       // Wait 100 ns for global reset to finish
@@ -129,7 +135,8 @@ module miner_test_v;
       end
       @(posedge sysclk_p);
       //uut.nonce = 30411740 - 10;
-      uut.nonce = 32'h2966e1b9 - 10;
+      //uut.nonce = 32'h2966e1b9 - 10;
+      uut.nonce = 32'h0e33337a - 10;
             
       //read
       read_nonce = 0;
