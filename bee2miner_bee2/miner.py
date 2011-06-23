@@ -9,7 +9,10 @@
 # Our implementation is running at 12.5 kHash/sec,
 # so 2^32 nonce attempts takes 5.7 minutes.
 # Since that's half a friggin block time I'll make it 3 minutes.
-askrate = (3 * 60)
+# Actually apparently a 60 second limit is more
+# reasonable (since transactions are being added to the blocks
+# at about that rate).
+askrate = (1 * 60)
 
 ###############################################################################
 
@@ -101,8 +104,6 @@ class Writer(Thread):
                 # In this case, keep crunching with the old data. It will get 
                 # stale at some point, but it's better than doing nothing.
                 
-            print ("Got Work.\n");
-
             self.block = work['data']
             
             midstate = work['midstate']
@@ -116,12 +117,20 @@ class Writer(Thread):
             payload = rmid + rdata2
             
             sock.send(payload)
-            print("Sending new work...\n");
+            #print("Sending new work...\n");
 
-            result = golden.wait(askrate)
-
-            if result:
-                golden.clear()
+            #Note: My version of python is 2.5, which
+            # is old and lousy and does not
+            # actually return something meaningful
+            # (That change happened in python 2.7).
+            # So have to check the flag after wait returns.
+            # result = golden.wait(askrate)
+            # Not really sure why we wouldn't clear the
+            # event unconditionally.
+            golden.wait(askrate);
+            
+            #if (result):
+            golden.clear()
 
 class Submitter(Thread):
     def __init__(self, block, nonce):
